@@ -14,8 +14,9 @@ OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 # Configure LLM - use a standard model instead of reasoning model
 # For GPT-5/o1 reasoning models, use: temperature=1.0, max_tokens=16000
 lm = dspy.LM(
-    model="openrouter/anthropic/claude-3.5-sonnet",  # Changed from gpt-5
-    temperature=0.7,
+    model="openrouter/openai/gpt-5",  # Changed from gpt-5
+    temperature=1,
+    max_tokens=20000,
     api_base=OPENROUTER_API_BASE,
     api_key=OPENROUTER_API_KEY,
 )
