@@ -51,11 +51,13 @@ def process_pdf_batch(pdf_files: List[Path], batch_size: int = 10) -> List[Dict]
             # Convert PDF to markdown
             markdown_content = convert_pdf_to_markdown(str(pdf_path))
 
-            documents.append({
-                "filename": pdf_path.name,
-                "filepath": str(pdf_path),
-                "content": markdown_content,
-            })
+            documents.append(
+                {
+                    "filename": pdf_path.name,
+                    "filepath": str(pdf_path),
+                    "content": markdown_content,
+                }
+            )
         except Exception as e:
             print(f"Error processing {pdf_path.name}: {e}")
             continue
@@ -70,7 +72,7 @@ def process_pdf_batch(pdf_files: List[Path], batch_size: int = 10) -> List[Dict]
     # Create embeddings in batches
     all_embeddings = []
     for i in tqdm(range(0, len(contents), batch_size), desc="Creating embeddings"):
-        batch = contents[i:i + batch_size]
+        batch = contents[i : i + batch_size]
         embeddings = create_embeddings(batch, batch_size=len(batch))
         all_embeddings.extend(embeddings)
 
@@ -81,7 +83,12 @@ def process_pdf_batch(pdf_files: List[Path], batch_size: int = 10) -> List[Dict]
     return documents
 
 
-def ingest_table(table_name: str, dataset_path: str = "dataset", batch_size: int = 10, max_files: int = None):
+def ingest_table(
+    table_name: str,
+    dataset_path: str = "dataset",
+    batch_size: int = 10,
+    max_files: int = None,
+):
     """
     Ingest all PDFs from a table directory into LanceDB.
 
@@ -91,9 +98,9 @@ def ingest_table(table_name: str, dataset_path: str = "dataset", batch_size: int
         batch_size: Number of documents to embed at once
         max_files: Maximum number of files to process (None for all)
     """
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"Processing table: {table_name}")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     # Get all PDF files
     pdf_files = get_pdf_files(table_name, dataset_path)
@@ -130,14 +137,18 @@ def ingest_table(table_name: str, dataset_path: str = "dataset", batch_size: int
 
         # Create new table
         table = db.create_table(table_name, data=df)
-        print(f" Successfully created table '{table_name}' with {len(documents)} documents")
+        print(
+            f"Successfully created table '{table_name}' with {len(documents)} documents"
+        )
 
     except Exception as e:
         print(f"Error storing data in LanceDB: {e}")
         raise
 
 
-def ingest_all_tables(dataset_path: str = "dataset", batch_size: int = 10, max_files_per_table: int = None):
+def ingest_all_tables(
+    dataset_path: str = "dataset", batch_size: int = 10, max_files_per_table: int = None
+):
     """
     Ingest all tables defined in table_names.
 
@@ -156,9 +167,9 @@ def ingest_all_tables(dataset_path: str = "dataset", batch_size: int = 10, max_f
             print(f"Failed to ingest table '{table_name}': {e}")
             continue
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("Ingestion complete!")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     # Show final table statistics
     print("\nFinal table statistics:")
@@ -178,24 +189,24 @@ if __name__ == "__main__":
     parser.add_argument(
         "--table",
         type=str,
-        help="Specific table to ingest (if not specified, ingests all tables)"
+        help="Specific table to ingest (if not specified, ingests all tables)",
     )
     parser.add_argument(
         "--dataset-path",
         type=str,
         default="dataset",
-        help="Path to dataset directory (default: dataset)"
+        help="Path to dataset directory (default: dataset)",
     )
     parser.add_argument(
         "--batch-size",
         type=int,
         default=10,
-        help="Batch size for embedding creation (default: 10)"
+        help="Batch size for embedding creation (default: 10)",
     )
     parser.add_argument(
         "--max-files",
         type=int,
-        help="Maximum number of files to process per table (default: all files)"
+        help="Maximum number of files to process per table (default: all files)",
     )
 
     args = parser.parse_args()

@@ -10,7 +10,7 @@ LANCEDB_URI = os.getenv("LANCEDB_URI")
 
 db = lancedb.connect(uri=LANCEDB_URI, api_key=LANCEDB_API_KEY, region=LANCEDB_REGION)
 
-table_names = [ # maps to dataset names
+table_names = [  # maps to dataset names
     "annual_reports",
     "inventory_receiving",
     "product_catalogs",
